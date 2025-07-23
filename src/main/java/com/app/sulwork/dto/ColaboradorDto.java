@@ -3,8 +3,11 @@ package com.app.sulwork.dto;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+
+import com.app.sulwork.validation.FutureOnly;
 
 public record ColaboradorDto(
         UUID id,
@@ -17,7 +20,7 @@ public record ColaboradorDto(
         String cpf,
 
         LocalDate date,
-
+        @FutureOnly
         List<String> itens,
 
         Boolean entregue

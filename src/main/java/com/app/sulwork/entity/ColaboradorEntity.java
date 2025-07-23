@@ -13,7 +13,8 @@ import java.util.UUID;
 public class ColaboradorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @Column(length = 36)
+    private String id;
 
     @Column(length = 250)
     private String nome;
@@ -27,5 +28,6 @@ public class ColaboradorEntity {
     @ElementCollection
     private List<String> itens;
 
+    @Column(nullable = true)
     private boolean entregue;
 }
