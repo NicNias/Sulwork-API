@@ -2,11 +2,10 @@ package com.app.sulwork.services;
 
 import com.app.sulwork.dto.ColaboradorDto;
 import com.app.sulwork.entity.ColaboradorEntity;
-import com.app.sulwork.exceptions.CustomException;
+import com.app.sulwork.exceptions.UserAlreadyExistsException;
 import com.app.sulwork.mappers.ColaboradorMapper;
 import com.app.sulwork.repository.ColaboradorRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,11 +16,11 @@ public class ColaboradorService {
 
     public ColaboradorDto createColaborador(ColaboradorDto colaboradorDto) {
         colaboradorRepository.findByNome(colaboradorDto.nome()).ifPresent(colaboradorEntity -> {
-            throw new CustomException("Colaborador ja cadastrado", HttpStatus.BAD_REQUEST, null);
+            throw new UserAlreadyExistsException("Colaborador ja cadastrado");
         });
 
         colaboradorRepository.findByCpf(colaboradorDto.cpf()).ifPresent(colaboradorEntity -> {
-            throw new CustomException("CPF de colaborador ja cadastrado", HttpStatus.BAD_REQUEST, null);
+            throw new UserAlreadyExistsException("CPF de colaborador ja cadastrado");
         });
 
         ColaboradorEntity colaboradorNew = colaboradorMapper.toModel(colaboradorDto);

@@ -1,5 +1,6 @@
 package com.app.sulwork.validation;
 
+import com.app.sulwork.exceptions.DateValidationException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -9,7 +10,10 @@ public class FutureOnlyValidator implements ConstraintValidator<FutureOnly, Loca
 
     @Override
     public boolean isValid(LocalDate date, ConstraintValidatorContext context) {
-        if (date == null) return true;
-        return date.isAfter(LocalDate.now());
+        if (date == null) {
+            return false;
+        }
+
+        return LocalDate.now().isBefore(date);
     }
 }

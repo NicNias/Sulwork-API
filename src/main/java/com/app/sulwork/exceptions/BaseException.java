@@ -1,19 +1,13 @@
 package com.app.sulwork.exceptions;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 
+@Getter
 @RequiredArgsConstructor
 public class BaseException extends RuntimeException {
-    private final HttpStatus httpStatus;
+
+    private final String httpStatusCode;
     private final String title;
     private final String detail;
-
-    public ProblemDetail problemDetail() {
-        ProblemDetail probD = ProblemDetail.forStatus(httpStatus);
-        probD.setTitle(title);
-        probD.setDetail(detail);
-        return probD;
-    }
 }

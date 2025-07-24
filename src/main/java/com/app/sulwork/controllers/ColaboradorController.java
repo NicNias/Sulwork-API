@@ -18,7 +18,7 @@ public class ColaboradorController {
     private final ColaboradorService colaboradorService;
 
     @PostMapping("/create")
-    public ResponseEntity<ColaboradorDto> saveColaborador(@RequestBody @Valid ColaboradorDto colaboradorDto) {
+    public ResponseEntity<ColaboradorDto> saveColaborador(@Valid @RequestBody ColaboradorDto colaboradorDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(colaboradorService.createColaborador(colaboradorDto));
     }
 }

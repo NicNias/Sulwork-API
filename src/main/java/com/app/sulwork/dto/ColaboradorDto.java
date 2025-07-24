@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Pattern;
 import com.app.sulwork.validation.FutureOnly;
 
 public record ColaboradorDto(
-        UUID id,
+        String id,
 
         @NotBlank(message = "O campo nome é obrigatório")
         String nome,
@@ -19,8 +19,9 @@ public record ColaboradorDto(
         @Pattern(regexp = "\\d{11}", message = "O CPF deve conter apenas números. EX: 99999999999")
         String cpf,
 
+        @FutureOnly(message = "Teste")
         LocalDate date,
-        @FutureOnly
+
         List<String> itens,
 
         Boolean entregue
