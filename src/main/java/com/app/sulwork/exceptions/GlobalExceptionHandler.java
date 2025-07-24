@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ProblemDetail> handleBaseException(BaseException ex) {
         ProblemDetail pb = mapToProblemDetail(ex);

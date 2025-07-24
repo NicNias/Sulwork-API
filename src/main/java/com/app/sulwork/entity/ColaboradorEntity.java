@@ -23,7 +23,7 @@ public class ColaboradorEntity {
     private String cpf;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDate dataCafe;
 
     @ElementCollection
     private List<String> itens;
