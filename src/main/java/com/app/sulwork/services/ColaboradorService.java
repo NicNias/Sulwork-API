@@ -1,6 +1,7 @@
 package com.app.sulwork.services;
 
 import com.app.sulwork.dto.ColaboradorDto;
+import com.app.sulwork.dto.UpdatedCafeDto;
 import com.app.sulwork.entity.ColaboradorEntity;
 import com.app.sulwork.exceptions.colaboradores.ColaboradoresAlreadyExistsEception;
 import com.app.sulwork.exceptions.colaboradores.ColaboradoresNotFoundException;
@@ -10,7 +11,10 @@ import com.app.sulwork.repository.ColaboradorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +55,50 @@ public class ColaboradorService {
 
         return colaboradorMapper.ListColaboradorDto(colaboradores);
     }
+
+    public ColaboradorDto updateDataCafeAndItens(String id, UpdatedCafeDto updatedCafeDto) {
+        ColaboradorEntity colaborador = colaboradorRepository.findById(id).orElseThrow(() -> {
+            throw new ColaboradoresNotFoundException("Nenhum Colaborador foi encontrado!");
+        });
+
+        List<ColaboradorEntity> conflitos = colaboradorRepository.findByDataCafeAndItens(updatedCafeDto.dataCafe(), updatedCafeDto.itens());
+        boolean temConflito = conflitos.stream().anyMatch(c -> !c.getId().equals(id));
+
+        if (temConflito) {
+            throw new ItemsAlreadyRegisteredForDateException("Um ou mais itens já foram cadastrados para esta data.");
+        }
+
+        colaborador.setDataCafe(updatedCafeDto.dataCafe());
+        colaborador.setItens(updatedCafeDto.itens());
+
+        colaboradorRepository.save(colaborador);
+
+        return colaboradorMapper.toDto(colaborador);
+    }
+
+    public ColaboradorDto addItensAndUpdateDataCafe(String id, UpdatedCafeDto updatedCafeDto) {
+        ColaboradorEntity colaborador = colaboradorRepository.findById(id).orElseThrow(() -> {
+            throw new ColaboradoresNotFoundException("Nenhum Colaborador foi encontrado!");
+        });
+
+        Set<String> itensAtuais = new HashSet<>(colaborador.getItens());
+        itensAtuais.addAll(updatedCafeDto.itens());
+
+        List<ColaboradorEntity> conflitos = colaboradorRepository.findByDataCafeAndItens(updatedCafeDto.dataCafe(), new ArrayList<>(itensAtuais));
+        boolean temConflito = conflitos.stream().anyMatch(c -> !c.getId().equals(id));
+
+        if (temConflito) {
+            throw new ItemsAlreadyRegisteredForDateException("Um ou mais itens já foram cadastrados para esta data.");
+        }
+
+        colaborador.setDataCafe(updatedCafeDto.dataCafe());
+        colaborador.setItens(new ArrayList<>(itensAtuais));
+
+        colaboradorRepository.save(colaborador);
+
+        return colaboradorMapper.toDto(colaborador);
+    }
+
 
     public void deleteColaborador(String id) {
         ColaboradorEntity colaborador = colaboradorRepository.findById(id).orElseThrow(() -> {

@@ -1,6 +1,7 @@
 package com.app.sulwork.controllers;
 
 import com.app.sulwork.dto.ColaboradorDto;
+import com.app.sulwork.dto.UpdatedCafeDto;
 import com.app.sulwork.services.ColaboradorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,18 @@ public class ColaboradorController {
     @GetMapping("/findall")
     public ResponseEntity<List<ColaboradorDto>> getAllColaboradores() {
         return ResponseEntity.status(HttpStatus.OK).body(colaboradorService.findAll());
+    }
+
+    @PatchMapping("/cafe/{id}")
+    public ResponseEntity<ColaboradorDto> updateCafe(@PathVariable String id, @RequestBody @Valid UpdatedCafeDto updatedCafeDto) {
+        ColaboradorDto updated = colaboradorService.updateDataCafeAndItens(id, updatedCafeDto);
+        return ResponseEntity.ok(updated);
+    }
+
+    @PatchMapping("/cafe/adicionar-itens/{id}")
+    public ResponseEntity<ColaboradorDto> addItensAndUpdateDate(@PathVariable String id, @RequestBody @Valid UpdatedCafeDto updatedCafeDto) {
+        ColaboradorDto colaboradorUpdated = colaboradorService.addItensAndUpdateDataCafe(id, updatedCafeDto);
+        return ResponseEntity.ok(colaboradorUpdated);
     }
 
     @DeleteMapping("/delete/{id}")
