@@ -9,6 +9,7 @@ import com.app.sulwork.exceptions.colaboradores.ColaboradoresNotFoundException;
 import com.app.sulwork.exceptions.colaboradores.ItemsAlreadyRegisteredForDateException;
 import com.app.sulwork.mappers.ColaboradorMapper;
 import com.app.sulwork.repository.ColaboradorRepository;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +49,7 @@ public class ColaboradorService {
         return colaboradorMapper.toDto(colaboradorNew);
     }
 
+    @Transactional(readOnly = true)
     public List<ColaboradorDto> findAll() {
         List<ColaboradorEntity> colaboradores = colaboradorRepository.findAll();
         if (colaboradores.isEmpty()) {
@@ -79,6 +81,7 @@ public class ColaboradorService {
         return colaboradorMapper.toDto(colaborador);
     }
 
+    @Transactional
     public ColaboradorDto addItensAndUpdateDataCafe(String id, UpdatedCafeDto updatedCafeDto) {
         ColaboradorEntity colaborador = colaboradorRepository.findById(id).orElseThrow(() -> {
             throw new ColaboradoresNotFoundException("Nenhum Colaborador foi encontrado!");
@@ -101,6 +104,7 @@ public class ColaboradorService {
         return colaboradorMapper.toDto(colaborador);
     }
 
+    @Transactional
     public String UpdatedStatus(String id, UpdatedStatusCafeDto updatedStatusCafeDto) {
         ColaboradorEntity colaborador = colaboradorRepository.findById(id).orElseThrow(() -> {
             throw new ColaboradoresNotFoundException("Nenhum Colaborador foi encontrado!");

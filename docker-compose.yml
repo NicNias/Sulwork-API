@@ -1,0 +1,42 @@
+services:
+  mysql:
+    image: mysql:8.0
+    restart: always
+    container_name: mysql-sulwork
+    environment:
+      MYSQL_DATABASE: sulwork
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3307:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - sulwork
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  app:
+    build: .
+    depends_on:
+      mysql:
+        condition: service_healthy
+    container_name: sulwork-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/sulwork
+      SPRING_DATASOURCE_USER: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "8081:8080"
+    networks:
+      - sulwork
+
+volumes:
+  mysql_data:
+
+networks:
+  sulwork:
+    driver: bridge
