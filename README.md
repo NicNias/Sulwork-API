@@ -28,6 +28,14 @@
       <code>git clone https://github.com/NicNias/Sulwork-API.git</code>
     </li>
     <li>
+      Variáveis para testes e para rodar a aplicação localmente: <br>
+      <code>spring.datasource.url=${SPRING_DATASOURCE_URL}</code> <br>
+      <code>spring.datasource.username=${SPRING_DATASOURCE_USERNAME}</code> <br>
+      <code>spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}</code>
+      <br>
+      Para o ambiente Docker, deve-se criar um arquivo <code>.env</code> copiando as variáveis do arquivo <code>.env.example</code>.
+    </li>
+    <li>
       Construa e inicie os containers usando o Docker Compose:
       <code>docker-compose up -d</code>
     </li>
