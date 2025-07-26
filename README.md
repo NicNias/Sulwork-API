@@ -33,7 +33,7 @@
     </li>
     <li>
       Acesse o Swagger pela URL: <code>http://localhost:8081/swagger-ui/index.html</code>
-      <br />
+      <br /> <br />
       <strong>Observação:</strong> Se estiver executando a aplicação via <code>Docker</code>, use a porta <code>8081</code>. 
       Caso esteja rodando localmente (sem Docker), utilize a porta <code>8080</code>: <code>http://localhost:8080/swagger-ui/index.html</code>
     </li>
