@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ItemsAlreadyRegisteredForDateExceptionUnitTest {
+class ItemsAlreadyRegisteredForDateExceptionUnitTest {
     @Test
     void criarExcecaoComDetalheCorreto() {
         String detalhe = "O item 'Pão' já foi registrado para 2025-07-25";

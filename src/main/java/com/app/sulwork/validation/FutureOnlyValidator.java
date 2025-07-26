@@ -1,6 +1,5 @@
 package com.app.sulwork.validation;
 
-import com.app.sulwork.exceptions.colaboradores.DateValidationException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

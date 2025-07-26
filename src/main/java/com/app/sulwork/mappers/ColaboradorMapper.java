@@ -11,5 +11,5 @@ public interface ColaboradorMapper {
     ColaboradorEntity toModel(ColaboradorDto colaboradorDto);
     ColaboradorDto toDto(ColaboradorEntity colaboradorEntity);
 
-    List<ColaboradorDto> ListColaboradorDto(List<ColaboradorEntity> colaboradores);
+    List<ColaboradorDto> listColaboradorDto(List<ColaboradorEntity> colaboradores);
 }

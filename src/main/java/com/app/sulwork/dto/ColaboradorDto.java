@@ -3,6 +3,7 @@ package com.app.sulwork.dto;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.app.sulwork.validation.ValidCpf;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
@@ -17,6 +18,7 @@ public record ColaboradorDto(
         @NotBlank(message = "O campo nome é obrigatório")
         String nome,
 
+        @ValidCpf(message = "O CPF informado é inválido. Por favor, verifique.")
         @NotBlank(message = "O campo cpf é obrigatório")
         @Pattern(regexp = "\\d{11}", message = "O CPF deve conter apenas números. EX: 99999999999")
         String cpf,

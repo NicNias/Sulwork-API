@@ -13,7 +13,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ColaboradorMapperUnitTest {
+class ColaboradorMapperUnitTest {
     private ColaboradorMapper mapper;
     private ColaboradorDto dto;
 
@@ -57,14 +57,14 @@ public class ColaboradorMapperUnitTest {
                 .entregue(false)
                 .build();
 
-        ColaboradorDto dto = mapper.toDto(entity);
+        ColaboradorDto resultadoDto = mapper.toDto(entity);
 
-        assertEquals(entity.getId(), dto.id());
-        assertEquals(entity.getNome(), dto.nome());
-        assertEquals(entity.getCpf(), dto.cpf());
-        assertEquals(entity.getDataCafe(), dto.dataCafe());
-        assertEquals(entity.getItens(), dto.itens());
-        assertEquals(entity.isEntregue(), dto.entregue());
+        assertEquals(entity.getId(), resultadoDto.id());
+        assertEquals(entity.getNome(), resultadoDto.nome());
+        assertEquals(entity.getCpf(), resultadoDto.cpf());
+        assertEquals(entity.getDataCafe(), resultadoDto.dataCafe());
+        assertEquals(entity.getItens(), resultadoDto.itens());
+        assertEquals(entity.isEntregue(), resultadoDto.entregue());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class ColaboradorMapperUnitTest {
                         .build()
         );
 
-        List<ColaboradorDto> dtos = mapper.ListColaboradorDto(entities);
+        List<ColaboradorDto> dtos = mapper.listColaboradorDto(entities);
 
         assertEquals(2, dtos.size());
         assertEquals("João", dtos.get(0).nome());

@@ -1,4 +1,4 @@
-package com.app.sulwork;
+package com.app.sulwork.services;
 
 import com.app.sulwork.dto.ColaboradorDto;
 import com.app.sulwork.dto.UpdatedCafeDto;
@@ -70,7 +70,7 @@ class ColaboradorServiceIntegrationTest {
     @DisplayName("Deve retornar todos os colaboradores ou lançar exceção se lista estiver vazia")
     void deveRetornarTodos() {
         // Arrange
-        ColaboradorDto salvo = colaboradorService.createColaborador(dto);
+        colaboradorService.createColaborador(dto);
 
         // Act
         List<ColaboradorDto> lista = colaboradorService.findAll();
@@ -87,9 +87,7 @@ class ColaboradorServiceIntegrationTest {
     @DisplayName("Deve lançar exceção quando não houver colaboradores")
     void nenhumEncontrado() {
         // Act + Assert
-        assertThrows(ColaboradoresNotFoundException.class, () -> {
-            colaboradorService.findAll();
-        });
+        assertThrows(ColaboradoresNotFoundException.class, colaboradorService::findAll);
     }
 
     @Test
@@ -170,9 +168,10 @@ class ColaboradorServiceIntegrationTest {
                 false
         );
 
-        assertThrows(ItemsAlreadyRegisteredForDateException.class, () -> {
-            colaboradorService.updateColaborador(salvo2.id(), dtoConflito);
-        });
+        String id = salvo2.id();
+
+        assertThrows(ItemsAlreadyRegisteredForDateException.class,
+                () -> colaboradorService.updateColaborador(id, dtoConflito));
     }
 
     @Test
@@ -222,10 +221,11 @@ class ColaboradorServiceIntegrationTest {
                 List.of("Bolo")
         );
 
+        String id = salvo.id();
+
         // Act + Assert
-        assertThrows(ItemsAlreadyRegisteredForDateException.class, () -> {
-            colaboradorService.addItensAndUpdateDataCafe(salvo.id(), atualizacao);
-        });
+        assertThrows(ItemsAlreadyRegisteredForDateException.class,
+                () -> colaboradorService.addItensAndUpdateDataCafe(id, atualizacao));
     }
 
     @Test
@@ -237,7 +237,7 @@ class ColaboradorServiceIntegrationTest {
         UpdatedStatusCafeDto statusDto = new UpdatedStatusCafeDto(true);
 
         // Act
-        String resultado = colaboradorService.UpdatedStatus(salvo.id(), statusDto);
+        String resultado = colaboradorService.updatedStatus(salvo.id(), statusDto);
 
         // Assert
         assertEquals("Status de entrega atualizado com sucesso!", resultado);
@@ -252,7 +252,7 @@ class ColaboradorServiceIntegrationTest {
         UpdatedStatusCafeDto statusDto = new UpdatedStatusCafeDto(true);
 
         assertThrows(ColaboradoresNotFoundException.class, () -> {
-            colaboradorService.UpdatedStatus("id-invalido", statusDto);
+            colaboradorService.updatedStatus("id-invalido", statusDto);
         });
     }
 

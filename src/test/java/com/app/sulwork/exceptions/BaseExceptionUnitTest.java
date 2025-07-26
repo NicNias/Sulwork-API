@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BaseExceptionUnitTest {
+class BaseExceptionUnitTest {
     @Test
     void criarBaseExceptionComDadosCorretos() {
         String statusCode = "404";

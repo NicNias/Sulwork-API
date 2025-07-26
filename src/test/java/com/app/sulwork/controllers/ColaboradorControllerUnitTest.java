@@ -15,7 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-public class ColaboradorControllerUnitTest {
+class ColaboradorControllerUnitTest {
     @InjectMocks
     private ColaboradorController controller;
 
@@ -39,7 +39,7 @@ public class ColaboradorControllerUnitTest {
 
         ResponseEntity<ColaboradorDto> response = controller.saveColaborador(inputDto);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(201);
+        assertThat(response.getStatusCode().value()).isEqualTo(201);
         assertThat(response.getBody()).isEqualTo(outputDto);
 
         verify(service).createColaborador(inputDto);
@@ -54,7 +54,7 @@ public class ColaboradorControllerUnitTest {
 
         ResponseEntity<List<ColaboradorDto>> response = controller.getAllColaboradores();
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getBody()).isEqualTo(lista);
 
         verify(service).findAll();
@@ -69,7 +69,7 @@ public class ColaboradorControllerUnitTest {
 
         ResponseEntity<ColaboradorDto> response = controller.updateColaborador(id, dto);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getBody()).isEqualTo(dto);
 
         verify(service).updateColaborador(id, dto);
@@ -85,7 +85,7 @@ public class ColaboradorControllerUnitTest {
 
         ResponseEntity<ColaboradorDto> response = controller.addItensAndUpdateDate(id, updatedCafeDto);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getBody()).isEqualTo(dto);
 
         verify(service).addItensAndUpdateDataCafe(id, updatedCafeDto);
@@ -97,14 +97,14 @@ public class ColaboradorControllerUnitTest {
         UpdatedStatusCafeDto updatedStatusCafeDto = new UpdatedStatusCafeDto(true);
         String mensagemEsperada = "Status atualizado com sucesso";
 
-        when(service.UpdatedStatus(eq(id), any(UpdatedStatusCafeDto.class))).thenReturn(mensagemEsperada);
+        when(service.updatedStatus(eq(id), any(UpdatedStatusCafeDto.class))).thenReturn(mensagemEsperada);
 
         ResponseEntity<String> response = controller.updateStatus(id, updatedStatusCafeDto);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+        assertThat(response.getStatusCode().value()).isEqualTo(200);
         assertThat(response.getBody()).isEqualTo(mensagemEsperada);
 
-        verify(service).UpdatedStatus(id, updatedStatusCafeDto);
+        verify(service).updatedStatus(id, updatedStatusCafeDto);
     }
 
     @Test
@@ -115,7 +115,7 @@ public class ColaboradorControllerUnitTest {
 
         ResponseEntity<Void> response = controller.deleteColaborador(id);
 
-        assertThat(response.getStatusCodeValue()).isEqualTo(204);
+        assertThat(response.getStatusCode().value()).isEqualTo(204);
         assertThat(response.getBody()).isNull();
 
         verify(service).deleteColaborador(id);

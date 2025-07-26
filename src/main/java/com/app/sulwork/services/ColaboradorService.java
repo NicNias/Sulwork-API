@@ -56,7 +56,7 @@ public class ColaboradorService {
             throw new ColaboradoresNotFoundException("Nenhum Colaborador foi encontrado!");
         }
 
-        return colaboradorMapper.ListColaboradorDto(colaboradores);
+        return colaboradorMapper.listColaboradorDto(colaboradores);
     }
 
     public ColaboradorDto updateColaborador(String id, ColaboradorDto colaboradorDto) {
@@ -105,7 +105,7 @@ public class ColaboradorService {
     }
 
     @Transactional
-    public String UpdatedStatus(String id, UpdatedStatusCafeDto updatedStatusCafeDto) {
+    public String updatedStatus(String id, UpdatedStatusCafeDto updatedStatusCafeDto) {
         ColaboradorEntity colaborador = colaboradorRepository.findById(id).orElseThrow(() -> {
             throw new ColaboradoresNotFoundException("Nenhum Colaborador foi encontrado!");
         });

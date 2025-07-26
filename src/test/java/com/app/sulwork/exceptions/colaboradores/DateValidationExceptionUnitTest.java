@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DateValidationExceptionUnitTest {
+class DateValidationExceptionUnitTest {
     @Test
     void criarExcecaoComDetalheCorreto() {
         String detalhe = "Data fornecida é inválida ou está no passado";

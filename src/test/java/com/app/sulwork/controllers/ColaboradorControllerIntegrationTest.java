@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @AutoConfigureMockMvc
-public class ColaboradorControllerIntegrationTest {
+class ColaboradorControllerIntegrationTest {
     private final MockMvc mockMvc;
 
     private final ColaboradorService colaboradorService;

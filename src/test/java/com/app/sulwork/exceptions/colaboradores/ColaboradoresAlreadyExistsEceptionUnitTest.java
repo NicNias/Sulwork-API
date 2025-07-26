@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ColaboradoresAlreadyExistsEceptionUnitTest {
+class ColaboradoresAlreadyExistsEceptionUnitTest {
     @Test
     void criarExcecaoComDetalheCorreto() {
         String detalhe = "CPF 12345678900 já está em uso";

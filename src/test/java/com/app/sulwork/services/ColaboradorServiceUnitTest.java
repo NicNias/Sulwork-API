@@ -4,20 +4,28 @@ import com.app.sulwork.dto.ColaboradorDto;
 import com.app.sulwork.dto.UpdatedCafeDto;
 import com.app.sulwork.dto.UpdatedStatusCafeDto;
 import com.app.sulwork.entity.ColaboradorEntity;
-import com.app.sulwork.exceptions.colaboradores.*;
+import com.app.sulwork.exceptions.colaboradores.ColaboradoresAlreadyExistsEception;
+import com.app.sulwork.exceptions.colaboradores.ColaboradoresNotFoundException;
+import com.app.sulwork.exceptions.colaboradores.ItemsAlreadyRegisteredForDateException;
 import com.app.sulwork.mappers.ColaboradorMapper;
 import com.app.sulwork.repository.ColaboradorRepository;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
-public class ColaboradorServiceUnitTest {
+class ColaboradorServiceUnitTest {
     @InjectMocks
     private ColaboradorService service;
 
@@ -109,7 +117,7 @@ public class ColaboradorServiceUnitTest {
     @Test
     void findAll_deveRetornarListaQuandoExistir() {
         when(repository.findAll()).thenReturn(List.of(colaboradorEntity));
-        when(mapper.ListColaboradorDto(any())).thenReturn(List.of(colaboradorDto));
+        when(mapper.listColaboradorDto(any())).thenReturn(List.of(colaboradorDto));
 
         List<ColaboradorDto> lista = service.findAll();
 
@@ -239,7 +247,7 @@ public class ColaboradorServiceUnitTest {
         when(repository.findById(id)).thenReturn(Optional.of(colaboradorEntity));
         when(mapper.toDto(any())).thenReturn(colaboradorDto);
 
-        String resultado = service.UpdatedStatus(id, updatedStatusCafeDto);
+        String resultado = service.updatedStatus(id, updatedStatusCafeDto);
 
         assertThat(resultado).isEqualTo("Status de entrega atualizado com sucesso!");
         verify(repository).save(any(ColaboradorEntity.class));
@@ -249,7 +257,9 @@ public class ColaboradorServiceUnitTest {
     void UpdatedStatus_deveLancarExcecaoQuandoNaoEncontrar() {
         when(repository.findById(anyString())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.UpdatedStatus("id123", new UpdatedStatusCafeDto(true)))
+        ThrowingCallable executable = () -> service.updatedStatus("id123", new UpdatedStatusCafeDto(true));
+
+        assertThatThrownBy(executable)
                 .isInstanceOf(ColaboradoresNotFoundException.class)
                 .hasMessageContaining("Nenhum Colaborador foi encontrado");
     }

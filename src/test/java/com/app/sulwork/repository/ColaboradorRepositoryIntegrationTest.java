@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class ColaboradorRepositoryIntegrationTest {
+class ColaboradorRepositoryIntegrationTest {
     private final ColaboradorRepository colaboradorRepository;
 
     @Test

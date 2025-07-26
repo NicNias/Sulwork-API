@@ -42,7 +42,7 @@ public class ColaboradorController {
 
     @PatchMapping("/cafe/status/{id}")
     public ResponseEntity<String> updateStatus(@PathVariable String id, @RequestBody @Valid UpdatedStatusCafeDto updatedStatusCafeDto) {
-        String mensagem = colaboradorService.UpdatedStatus(id, updatedStatusCafeDto);
+        String mensagem = colaboradorService.updatedStatus(id, updatedStatusCafeDto);
         return ResponseEntity.ok(mensagem);
     }
 

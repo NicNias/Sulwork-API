@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ColaboradoresNotFoundExceptionUnitTest {
+class ColaboradoresNotFoundExceptionUnitTest {
     @Test
     void criarExcecaoComDetalheCorreto() {
         String detalhe = "Nenhum colaborador com o ID 123 encontrado";
