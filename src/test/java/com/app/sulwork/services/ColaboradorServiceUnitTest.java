@@ -94,7 +94,7 @@ class ColaboradorServiceUnitTest {
 
         assertThatThrownBy(() -> service.createColaborador(colaboradorDto))
                 .isInstanceOf(ColaboradoresAlreadyExistsEception.class)
-                .hasMessageContaining("CPF de colaborador ja cadastrado");
+                .hasMessageContaining("CPF de colaborador");
 
         verify(repository, never()).save(any());
     }
@@ -110,6 +110,46 @@ class ColaboradorServiceUnitTest {
                 .hasMessageContaining("Um ou mais itens já foram cadastrados para esta data");
 
         verify(repository, never()).save(any());
+    }
+
+    @Test
+    void createColaborador_deveCapitalizarItens() {
+        ColaboradorDto dtoEntrada = new ColaboradorDto(
+                null,
+                "Carlos",
+                "98765432100",
+                LocalDate.now().plusDays(1),
+                List.of("suco de limão", "bolo de chocolate"),
+                false
+        );
+
+        ColaboradorEntity entityEsperado = new ColaboradorEntity();
+        entityEsperado.setId("id987");
+        entityEsperado.setNome("Carlos");
+        entityEsperado.setCpf("98765432100");
+        entityEsperado.setDataCafe(dtoEntrada.dataCafe());
+        entityEsperado.setItens(List.of("Suco De Limão", "Bolo De Chocolate"));
+        entityEsperado.setEntregue(false);
+
+        ColaboradorDto dtoEsperado = new ColaboradorDto(
+                "id987",
+                "Carlos",
+                "98765432100",
+                dtoEntrada.dataCafe(),
+                List.of("Suco De Limão", "Bolo De Chocolate"),
+                false
+        );
+
+        when(repository.findByNome("Carlos")).thenReturn(Optional.empty());
+        when(repository.findByCpf("98765432100")).thenReturn(Optional.empty());
+        when(repository.findByDataCafeAndItens(dtoEntrada.dataCafe(), List.of("Suco De Limão", "Bolo De Chocolate"))).thenReturn(Collections.emptyList());
+        when(mapper.toModel(any())).thenReturn(entityEsperado);
+        when(mapper.toDto(entityEsperado)).thenReturn(dtoEsperado);
+
+        ColaboradorDto resultado = service.createColaborador(dtoEntrada);
+
+        assertThat(resultado.itens()).containsExactly("Suco De Limão", "Bolo De Chocolate");
+        verify(repository).save(any());
     }
 
     // findAll

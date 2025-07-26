@@ -8,7 +8,6 @@ import com.app.sulwork.exceptions.colaboradores.ColaboradoresAlreadyExistsEcepti
 import com.app.sulwork.exceptions.colaboradores.ColaboradoresNotFoundException;
 import com.app.sulwork.exceptions.colaboradores.ItemsAlreadyRegisteredForDateException;
 import com.app.sulwork.repository.ColaboradorRepository;
-import com.app.sulwork.services.ColaboradorService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,9 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ColaboradorServiceIntegrationTest {
 
     private final ColaboradorService colaboradorService;
-
     private final ColaboradorRepository colaboradorRepository;
-
     private ColaboradorDto dto;
 
     @BeforeEach
@@ -44,7 +41,7 @@ class ColaboradorServiceIntegrationTest {
                 "Maria",
                 "12345678901",
                 LocalDate.now().plusDays(1),
-                List.of("Pão"),
+                List.of("pão"), // com letra minúscula para testar a capitalização
                 false
         );
     }
@@ -52,15 +49,13 @@ class ColaboradorServiceIntegrationTest {
     @Test
     @DisplayName("Deve salvar um novo colaborador e impedir duplicatas")
     void deveSalvarENaoDuplicarColaborador() {
-        // Act
         ColaboradorDto salvo = colaboradorService.createColaborador(dto);
 
-        // Assert
         assertNotNull(salvo);
         assertEquals("Maria", salvo.nome());
         assertEquals("12345678901", salvo.cpf());
+        assertEquals(List.of("Pão"), salvo.itens()); // verificação com capitalização
 
-        // Act + Assert - Verifica duplicidade
         assertThrows(ColaboradoresAlreadyExistsEception.class, () -> {
             colaboradorService.createColaborador(dto);
         });
@@ -69,31 +64,27 @@ class ColaboradorServiceIntegrationTest {
     @Test
     @DisplayName("Deve retornar todos os colaboradores ou lançar exceção se lista estiver vazia")
     void deveRetornarTodos() {
-        // Arrange
         colaboradorService.createColaborador(dto);
 
-        // Act
         List<ColaboradorDto> lista = colaboradorService.findAll();
 
-        // Assert
         assertNotNull(lista);
         assertFalse(lista.isEmpty());
         assertEquals(1, lista.size());
         assertEquals("Maria", lista.get(0).nome());
         assertEquals("12345678901", lista.get(0).cpf());
+        assertEquals(List.of("Pão"), lista.get(0).itens());
     }
 
     @Test
     @DisplayName("Deve lançar exceção quando não houver colaboradores")
     void nenhumEncontrado() {
-        // Act + Assert
         assertThrows(ColaboradoresNotFoundException.class, colaboradorService::findAll);
     }
 
     @Test
     @DisplayName("Deve atualizar colaborador existente com sucesso")
     void atualizarColaboradorExistente() {
-        // Arrange
         ColaboradorDto salvo = colaboradorService.createColaborador(dto);
 
         ColaboradorDto dtoAtualizado = new ColaboradorDto(
@@ -101,14 +92,12 @@ class ColaboradorServiceIntegrationTest {
                 "Maria Atualizada",
                 "12345678902",
                 LocalDate.now().plusDays(2),
-                List.of("Café", "Bolo"),
+                List.of("café", "bolo"),
                 false
         );
 
-        // Act
         ColaboradorDto atualizado = colaboradorService.updateColaborador(salvo.id(), dtoAtualizado);
 
-        // Assert
         assertNotNull(atualizado);
         assertEquals("Maria Atualizada", atualizado.nome());
         assertEquals("12345678902", atualizado.cpf());
@@ -136,29 +125,26 @@ class ColaboradorServiceIntegrationTest {
     @Test
     @DisplayName("Deve lançar exceção ao tentar atualizar com itens conflitantes na mesma data")
     void ItensConflitantes() {
-        // Arrange
         ColaboradorDto colaborador1 = new ColaboradorDto(
                 null,
                 "João",
                 "99999999999",
                 LocalDate.now().plusDays(3),
-                List.of("Pão", "Suco"),
+                List.of("pão", "suco"),
                 false
         );
         ColaboradorDto salvo1 = colaboradorService.createColaborador(colaborador1);
 
-        // Arrange
         ColaboradorDto colaborador2 = new ColaboradorDto(
                 null,
                 "Ana",
                 "88888888888",
                 LocalDate.now().plusDays(4),
-                List.of("Bolo"),
+                List.of("bolo"),
                 false
         );
         ColaboradorDto salvo2 = colaboradorService.createColaborador(colaborador2);
 
-        // Tenta atualizar o segundo colaborador para usar data e itens do primeiro (conflito)
         ColaboradorDto dtoConflito = new ColaboradorDto(
                 salvo2.id(),
                 "Ana",
@@ -168,26 +154,21 @@ class ColaboradorServiceIntegrationTest {
                 false
         );
 
-        String id = salvo2.id();
-
         assertThrows(ItemsAlreadyRegisteredForDateException.class,
-                () -> colaboradorService.updateColaborador(id, dtoConflito));
+                () -> colaboradorService.updateColaborador(salvo2.id(), dtoConflito));
     }
 
     @Test
     @DisplayName("Deve adicionar itens ao colaborador sem conflito")
     void adicionarItensSemConflito() {
-        // Arrange
         ColaboradorDto salvo = colaboradorService.createColaborador(dto);
 
         UpdatedCafeDto atualizacao = new UpdatedCafeDto(
-                List.of("Suco", "Bolo")
+                List.of("suco", "bolo")
         );
 
-        // Act
         ColaboradorDto atualizado = colaboradorService.addItensAndUpdateDataCafe(salvo.id(), atualizacao);
 
-        // Assert
         assertNotNull(atualizado);
         assertEquals(3, atualizado.itens().size());
         assertTrue(atualizado.itens().containsAll(List.of("Pão", "Suco", "Bolo")));
@@ -196,50 +177,41 @@ class ColaboradorServiceIntegrationTest {
     @Test
     @DisplayName("Deve lançar exceção ao adicionar itens já registrados por outro colaborador na mesma data")
     void deveLancarExcecaoPorConflitoDeItens() {
-        // Arrange - colaborador 1
         colaboradorService.createColaborador(new ColaboradorDto(
                 null,
                 "Marcos",
                 "99999999999",
                 LocalDate.now().plusDays(2),
-                List.of("Bolo"),
+                List.of("bolo"),
                 false
         ));
 
-        // Arrange - colaborador 2
         ColaboradorDto salvo = colaboradorService.createColaborador(new ColaboradorDto(
                 null,
                 "Ana",
                 "88888888888",
                 LocalDate.now().plusDays(2),
-                List.of("Café"),
+                List.of("café"),
                 false
         ));
 
-        // Tentativa de adicionar item "Bolo" (já usado por Marcos na mesma data)
         UpdatedCafeDto atualizacao = new UpdatedCafeDto(
-                List.of("Bolo")
+                List.of("bolo")
         );
 
-        String id = salvo.id();
-
-        // Act + Assert
         assertThrows(ItemsAlreadyRegisteredForDateException.class,
-                () -> colaboradorService.addItensAndUpdateDataCafe(id, atualizacao));
+                () -> colaboradorService.addItensAndUpdateDataCafe(salvo.id(), atualizacao));
     }
 
     @Test
     @DisplayName("Deve atualizar o status de entrega de um colaborador existente com sucesso")
     void deveAtualizarStatusDeEntrega() {
-        // Arrange
         ColaboradorDto salvo = colaboradorService.createColaborador(dto);
 
         UpdatedStatusCafeDto statusDto = new UpdatedStatusCafeDto(true);
 
-        // Act
         String resultado = colaboradorService.updatedStatus(salvo.id(), statusDto);
 
-        // Assert
         assertEquals("Status de entrega atualizado com sucesso!", resultado);
 
         ColaboradorEntity entityAtualizado = colaboradorRepository.findById(salvo.id()).orElseThrow();
@@ -259,13 +231,10 @@ class ColaboradorServiceIntegrationTest {
     @Test
     @DisplayName("Deve deletar colaborador existente com sucesso")
     void deletarColaborador() {
-        // Arrange
         ColaboradorDto salvo = colaboradorService.createColaborador(dto);
 
-        // Act
         colaboradorService.deleteColaborador(salvo.id());
 
-        // Assert
         boolean existe = colaboradorRepository.findById(salvo.id()).isPresent();
         assertFalse(existe);
     }
@@ -273,7 +242,6 @@ class ColaboradorServiceIntegrationTest {
     @Test
     @DisplayName("Deve lançar exceção ao tentar deletar colaborador inexistente")
     void lancarExcecaoInexistente() {
-        // Act + Assert
         assertThrows(ColaboradoresNotFoundException.class, () -> {
             colaboradorService.deleteColaborador("id-invalido-qualquer");
         });
