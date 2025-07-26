@@ -28,7 +28,7 @@ services:
     env_file:
       - .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/sulwork
+      SPRING_DATASOURCE_URL: ${url_db}
       SPRING_DATASOURCE_USER: ${user_db}
       SPRING_DATASOURCE_PASSWORD: ${password_db}
     ports:
